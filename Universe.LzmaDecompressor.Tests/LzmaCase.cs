@@ -9,7 +9,7 @@ namespace Universe.LzmaDecompressor.Tests
 
     public class LzmaCases
     {
-        public static LzmaCase[] GetCases(char?[] chars, int[] sizes, int[] levels)
+        public static LzmaCase[] CreateCases(char?[] chars, int[] sizes, int[] levels)
         {
             var dir = new DirectoryInfo("LZMA-Test-Temp").FullName;
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -29,6 +29,8 @@ namespace Universe.LzmaDecompressor.Tests
                 lzmaCase.ActualFile = Path.Combine(dir, $"{lzmaCase.GetFileName()}.actual");
                 ret.Add(lzmaCase);
             }
+
+            return ret.ToArray();
 
             Random rnd = new Random(42);
             foreach (var lzmaCase in ret)
@@ -59,7 +61,10 @@ namespace Universe.LzmaDecompressor.Tests
         public static LzmaCase[] GetCases()
         {
             var levels = Enumerable.Repeat(42, 9).Select((x, index) => index + 1).ToArray();
-            return GetCases(new char?[] {'Z', null}, new[] {1, 100, 1000, 10000}, levels);
+            return CreateCases(
+                new char?[] {'Z', null},
+                new[] {1, 100, 1000, 10000},
+                levels);
         }
     }
     public class LzmaCase
