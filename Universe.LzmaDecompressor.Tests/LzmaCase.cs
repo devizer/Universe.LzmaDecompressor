@@ -10,7 +10,7 @@ namespace Universe.LzmaDecompressor.Tests
         {
             var dir = new DirectoryInfo("LZMA-Test-Temp").FullName;
             List<LzmaCase> ret = new List<LzmaCase>();
-            foreach (char ch in new char?[] {'Z', null})
+            foreach (char? ch in new char?[] {'Z', null})
                 foreach(int size in new [] { 1, 100, 1000, 10000})
                 {
                     var lzmaCase = new LzmaCase()

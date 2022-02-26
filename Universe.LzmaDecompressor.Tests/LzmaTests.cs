@@ -12,7 +12,7 @@ namespace Universe.LzmaDecompressor.Tests
 
         [Test]
         [TestCaseSource(typeof(LzmaCases), nameof(LzmaCases.GetCases))]
-        public void Test1()
+        public void TestAll(LzmaCase lzmaCase)
         {
             Assert.Pass();
         }
