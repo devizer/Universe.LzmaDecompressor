@@ -9,8 +9,16 @@ namespace Universe
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
 		{
 			byte[] properties = new byte[5];
-			// TODO: a stream can returns 5 bytes in 2+ calls, but FileStream never
-			if (inStream.Read(properties, 0, 5) != 5)
+			// a stream can returns 5 bytes in 2+ calls, but FileStream never
+			int remainBytes = properties.Length;
+			while (remainBytes > 0)
+			{
+				int n = inStream.Read(properties, properties.Length - remainBytes, remainBytes);
+				remainBytes -= n;
+				if (n == 0) break;
+			}
+
+			if (remainBytes > 0)
 				throw new WrongLzmaHeaderException("LZMA Header too short. Missed parameters block");
 
 			Decoder decoder = new Decoder();
