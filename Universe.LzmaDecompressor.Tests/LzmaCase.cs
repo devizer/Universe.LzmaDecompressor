@@ -11,7 +11,7 @@ namespace LzmaDecompressor.Tests
     {
         public static LzmaCase[] GetCases()
         {
-            var levels = Enumerable.Repeat(42, 9).Select((x, index) => index + 1).ToArray();
+            var levels = Enumerable.Repeat(42, 10).Select((x, index) => index + 1).ToArray();
             return CreateCases(
                 new char?[] { 'Z', null },
                 new[] { 1, 100, 1000, 10000, 100000 },
@@ -48,7 +48,7 @@ namespace LzmaDecompressor.Tests
                 if (lzmaCase.Content.HasValue)
                     content = Enumerable.Repeat((byte) lzmaCase.Content.Value, lzmaCase.Size).ToArray();
                 else
-                    content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte)rnd.Next(65, 95)).ToArray();
+                    content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte)rnd.Next(65, 90)).ToArray();
 
                 using (FileStream fs = new FileStream(lzmaCase.PlainFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
@@ -57,7 +57,8 @@ namespace LzmaDecompressor.Tests
 
                 Console.WriteLine($"Preparing {lzmaCase}");
                 var exe = (CrossInfo.ThePlatform == CrossInfo.Platform.Windows) ? "Binaries\\xz.exe" : "xz";
-                ProcessStartInfo si = new ProcessStartInfo(exe, $"--format=lzma -f -z -{lzmaCase.Level} -k \"{lzmaCase.PlainFile}\"");
+                var lvl = lzmaCase.Level < 10 ? $"-{lzmaCase.Level}" : "-9 -e";
+                ProcessStartInfo si = new ProcessStartInfo(exe, $"--format=lzma -f -z {lvl} -k \"{lzmaCase.PlainFile}\"");
                 using (Process p = Process.Start(si))
                 {
                     p.WaitForExit();
@@ -84,7 +85,8 @@ namespace LzmaDecompressor.Tests
         }
         public string GetFileName()
         {
-            return $"{Size:n0} bytes, lvl={Level}, {(Content == null ? "random" : $"char {Content}")}";
+            var lvl = Level == 10 ? "9-extreme" : Level.ToString();
+            return $"{Size:n0} bytes, lvl={lvl}, {(Content == null ? "random" : $"char {Content}")}";
         }
     }
 }
