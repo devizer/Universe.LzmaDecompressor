@@ -34,7 +34,12 @@ namespace LzmaDecompressor.Tests
             MemoryStream actual = new MemoryStream();
             using (FileStream compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                LzmaDecompressor.LzmaDecompressTo(compressed, actual);
+	            void ShowProgress(LzmaDecompressor.Progress info)
+	            {
+					Console.WriteLine($"Progress: {info}");
+	            }
+
+	            LzmaDecompressor.LzmaDecompressTo(compressed, actual, ShowProgress);
             }
 
             Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
