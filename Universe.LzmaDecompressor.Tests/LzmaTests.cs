@@ -14,6 +14,11 @@ namespace LzmaDecompressor.Tests
         {
             LzmaCase lzmaCase = LzmaCases.CreateCases(new char?[] {'A'}, new int[] {1}, new int[] {1}).First();
             Console.WriteLine($"JIT LZMA Case: {lzmaCase}");
+            try
+            {
+                TestAll(lzmaCase);
+            }
+            catch{}
         }
 
         [Test]
