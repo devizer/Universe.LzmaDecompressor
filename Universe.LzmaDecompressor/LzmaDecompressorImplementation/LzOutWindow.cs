@@ -2,7 +2,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 {
     using System.IO;
 
-    public class OutWindow
+    internal class OutWindow
     {
         private byte[] _buffer;
         private uint _pos;

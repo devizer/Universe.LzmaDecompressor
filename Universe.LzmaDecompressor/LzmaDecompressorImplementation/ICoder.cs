@@ -23,7 +23,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
         }
     }
 
-    public interface ICodeProgress
+    internal interface ICodeProgress
     {
         /// <summary>
         ///     Callback progress.
@@ -37,7 +37,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
         void SetProgress(long inSize, long outSize);
     }
 
-    public interface ICoder
+    internal interface ICoder
     {
         /// <summary>
         ///     Codes streams.
