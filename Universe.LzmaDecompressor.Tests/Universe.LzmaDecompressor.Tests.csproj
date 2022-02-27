@@ -14,6 +14,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Universe.LzmaDecompressor\Universe.LzmaDecompressor.csproj" />
+  </ItemGroup>
+
   <!--
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />

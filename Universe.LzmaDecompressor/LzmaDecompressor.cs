@@ -4,7 +4,7 @@
     using System.IO;
     using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
-    public class LzmaDecompressor
+    public class LzmaDecoder
     {
         public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
         {

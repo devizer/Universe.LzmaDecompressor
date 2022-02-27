@@ -9,6 +9,15 @@ namespace Universe.LzmaDecompressor.Tests
 
     public class LzmaCases
     {
+        public static LzmaCase[] GetCases()
+        {
+            var levels = Enumerable.Repeat(42, 9).Select((x, index) => index + 1).ToArray();
+            return CreateCases(
+                new char?[] { 'Z', null },
+                new[] { 1, 100, 1000, 10000, 100000 },
+                levels);
+        }
+
         public static LzmaCase[] CreateCases(char?[] chars, int[] sizes, int[] levels)
         {
             var dir = new DirectoryInfo("LZMA-Test-Temp").FullName;
@@ -30,7 +39,7 @@ namespace Universe.LzmaDecompressor.Tests
                 ret.Add(lzmaCase);
             }
 
-            return ret.ToArray();
+            // return ret.ToArray();
 
             Random rnd = new Random(42);
             foreach (var lzmaCase in ret)
@@ -39,7 +48,7 @@ namespace Universe.LzmaDecompressor.Tests
                 if (lzmaCase.Content.HasValue)
                     content = Enumerable.Repeat((byte) lzmaCase.Content.Value, lzmaCase.Size).ToArray();
                 else
-                    content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte)rnd.Next(0, 255)).ToArray();
+                    content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte)rnd.Next(65, 95)).ToArray();
 
                 using (FileStream fs = new FileStream(lzmaCase.PlainFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
@@ -48,7 +57,7 @@ namespace Universe.LzmaDecompressor.Tests
 
                 Console.WriteLine($"Preparing {lzmaCase}");
                 var exe = (CrossInfo.ThePlatform == CrossInfo.Platform.Windows) ? "Binaries\\xz.exe" : "xz";
-                ProcessStartInfo si = new ProcessStartInfo(exe, $"-z -{lzmaCase.Level} -k \"{lzmaCase.PlainFile}\"");
+                ProcessStartInfo si = new ProcessStartInfo(exe, $"--format=lzma -f -z -{lzmaCase.Level} -k \"{lzmaCase.PlainFile}\"");
                 using (Process p = Process.Start(si))
                 {
                     p.WaitForExit();
@@ -58,14 +67,6 @@ namespace Universe.LzmaDecompressor.Tests
             return ret.ToArray();
         }
 
-        public static LzmaCase[] GetCases()
-        {
-            var levels = Enumerable.Repeat(42, 9).Select((x, index) => index + 1).ToArray();
-            return CreateCases(
-                new char?[] {'Z', null},
-                new[] {1, 100, 1000, 10000},
-                levels);
-        }
     }
     public class LzmaCase
     {
