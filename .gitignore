@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 /out/LzmaDecoder-net-4.0.dll
 /out/LzmaDecompressor-net-4.0.dll
-/out/Standalone.LzmaDecompressor.cs-net-4.0.dll
+/out/Standalone.LzmaDecompressor.cs-net-*.dll
