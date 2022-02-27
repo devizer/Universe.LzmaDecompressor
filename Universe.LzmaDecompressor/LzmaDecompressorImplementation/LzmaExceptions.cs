@@ -1,13 +1,13 @@
-namespace Universe.LzmaDecompressionImplementation.SevenZip
+namespace Universe.LzmaDecompressionImplementation
 {
 	using System;
 
 	/// <summary>
 	///     The exception that is thrown when an error in input stream occurs during decoding.
 	/// </summary>
-	internal class DataErrorException : Exception
+	public class LzmaDataErrorException : Exception
 	{
-		public DataErrorException() : base("LZMA Data Error")
+		public LzmaDataErrorException() : base("LZMA Data Error")
 		{
 		}
 	}
@@ -15,19 +15,17 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 	/// <summary>
 	///     The exception that is thrown when the value of an argument is outside the allowable range.
 	/// </summary>
-	internal class InvalidParamException : Exception
+	public class InvalidLzmaParameterException : Exception
 	{
-		public InvalidParamException() : base("Invalid LZMA Parameter")
+		public InvalidLzmaParameterException() : base("Invalid LZMA Parameter")
 		{
 		}
 	}
 
-	internal class WrongLzmaHeaderException : Exception
+	public class WrongLzmaHeaderException : Exception
 	{
 		public WrongLzmaHeaderException(string message) : base(message)
 		{
 		}
 	}
-
-
 }

@@ -58,7 +58,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			if (nowPos64 < outSize64)
 			{
 				if (m_IsMatchDecoders[state.Index << Base.kNumPosStatesBitsMax].Decode(m_RangeDecoder) != 0)
-					throw new DataErrorException();
+					throw new LzmaDataErrorException();
 				state.UpdateChar();
 				var b = m_LiteralDecoder.DecodeNormal(m_RangeDecoder, 0, 0);
 				m_OutWindow.PutByte(b);
@@ -163,7 +163,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 					{
 						if (rep0 == 0xFFFFFFFF)
 							break;
-						throw new DataErrorException();
+						throw new LzmaDataErrorException();
 					}
 
 					m_OutWindow.CopyBlock(rep0, len);
@@ -179,13 +179,13 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		public void SetDecoderProperties(byte[] properties)
 		{
 			if (properties.Length < 5)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			var lc = properties[0] % 9;
 			var remainder = properties[0] / 9;
 			var lp = remainder % 5;
 			var pb = remainder / 5;
 			if (pb > Base.kNumPosStatesBitsMax)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			uint dictionarySize = 0;
 			for (var i = 0; i < 4; i++)
 				dictionarySize += (uint) properties[1 + i] << (i * 8);
@@ -208,16 +208,16 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		private void SetLiteralProperties(int lp, int lc)
 		{
 			if (lp > 8)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			if (lc > 8)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			m_LiteralDecoder.Create(lp, lc);
 		}
 
 		private void SetPosBitsProperties(int pb)
 		{
 			if (pb > Base.kNumPosStatesBitsMax)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			var numPosStates = (uint) 1 << pb;
 			m_LenDecoder.Create(numPosStates);
 			m_RepLenDecoder.Create(numPosStates);

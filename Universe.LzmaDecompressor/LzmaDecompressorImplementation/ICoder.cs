@@ -1,6 +1,5 @@
 namespace Universe.LzmaDecompressionImplementation.SevenZip
 {
-	using System;
 	using System.IO;
 
 	internal interface ICodeProgress
@@ -37,7 +36,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 		/// <param name="progress">
 		///     callback progress reference.
 		/// </param>
-		/// <exception cref="SevenZip.DataErrorException">
+		/// <exception cref="LzmaDataErrorException">
 		///     if input stream is not valid
 		/// </exception>
 		void Code(Stream inStream, Stream outStream,

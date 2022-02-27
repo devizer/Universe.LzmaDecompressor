@@ -1,7 +1,8 @@
 namespace Universe
 {
-	using System;
 	using System.IO;
+	using Universe.LzmaDecompressionImplementation;
+	using Universe.LzmaDecompressionImplementation.SevenZip;
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
 	public class LzmaDecompressor
@@ -9,8 +10,9 @@ namespace Universe
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
 		{
 			var properties = new byte[5];
+			// TODO: a stream can returns 5 bytes in 2+ calls, but FileStream never
 			if (inStream.Read(properties, 0, 5) != 5)
-				throw new Exception("input .lzma is too short");
+				throw new WrongLzmaHeaderException("LZMA Header too short. Missed parameters block");
 
 			var decoder = new Decoder();
 			decoder.SetDecoderProperties(properties);
@@ -19,7 +21,8 @@ namespace Universe
 			{
 				var v = inStream.ReadByte();
 				if (v < 0)
-					throw new Exception("Can't Read 1");
+					throw new WrongLzmaHeaderException("LZMA Header too short. Missed plain size block");
+
 				outSize |= (long) (byte) v << (8 * i);
 			}
 
@@ -30,28 +33,7 @@ namespace Universe
 }
 namespace Universe.LzmaDecompressionImplementation.SevenZip
 {
-	using System;
 	using System.IO;
-
-	/// <summary>
-	///     The exception that is thrown when an error in input stream occurs during decoding.
-	/// </summary>
-	internal class DataErrorException : Exception
-	{
-		public DataErrorException() : base("Data Error")
-		{
-		}
-	}
-
-	/// <summary>
-	///     The exception that is thrown when the value of an argument is outside the allowable range.
-	/// </summary>
-	internal class InvalidParamException : Exception
-	{
-		public InvalidParamException() : base("Invalid Parameter")
-		{
-		}
-	}
 
 	internal interface ICodeProgress
 	{
@@ -87,7 +69,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 		/// <param name="progress">
 		///     callback progress reference.
 		/// </param>
-		/// <exception cref="SevenZip.DataErrorException">
+		/// <exception cref="LzmaDataErrorException">
 		///     if input stream is not valid
 		/// </exception>
 		void Code(Stream inStream, Stream outStream,
@@ -344,7 +326,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			if (nowPos64 < outSize64)
 			{
 				if (m_IsMatchDecoders[state.Index << Base.kNumPosStatesBitsMax].Decode(m_RangeDecoder) != 0)
-					throw new DataErrorException();
+					throw new LzmaDataErrorException();
 				state.UpdateChar();
 				var b = m_LiteralDecoder.DecodeNormal(m_RangeDecoder, 0, 0);
 				m_OutWindow.PutByte(b);
@@ -449,7 +431,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 					{
 						if (rep0 == 0xFFFFFFFF)
 							break;
-						throw new DataErrorException();
+						throw new LzmaDataErrorException();
 					}
 
 					m_OutWindow.CopyBlock(rep0, len);
@@ -465,13 +447,13 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		public void SetDecoderProperties(byte[] properties)
 		{
 			if (properties.Length < 5)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			var lc = properties[0] % 9;
 			var remainder = properties[0] / 9;
 			var lp = remainder % 5;
 			var pb = remainder / 5;
 			if (pb > Base.kNumPosStatesBitsMax)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			uint dictionarySize = 0;
 			for (var i = 0; i < 4; i++)
 				dictionarySize += (uint) properties[1 + i] << (i * 8);
@@ -494,16 +476,16 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		private void SetLiteralProperties(int lp, int lc)
 		{
 			if (lp > 8)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			if (lc > 8)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			m_LiteralDecoder.Create(lp, lc);
 		}
 
 		private void SetPosBitsProperties(int pb)
 		{
 			if (pb > Base.kNumPosStatesBitsMax)
-				throw new InvalidParamException();
+				throw new InvalidLzmaParameterException();
 			var numPosStates = (uint) 1 << pb;
 			m_LenDecoder.Create(numPosStates);
 			m_RepLenDecoder.Create(numPosStates);
@@ -683,6 +665,37 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 					return (byte) symbol;
 				}
 			}
+		}
+	}
+}
+namespace Universe.LzmaDecompressionImplementation
+{
+	using System;
+
+	/// <summary>
+	///     The exception that is thrown when an error in input stream occurs during decoding.
+	/// </summary>
+	public class LzmaDataErrorException : Exception
+	{
+		public LzmaDataErrorException() : base("LZMA Data Error")
+		{
+		}
+	}
+
+	/// <summary>
+	///     The exception that is thrown when the value of an argument is outside the allowable range.
+	/// </summary>
+	public class InvalidLzmaParameterException : Exception
+	{
+		public InvalidLzmaParameterException() : base("Invalid LZMA Parameter")
+		{
+		}
+	}
+
+	public class WrongLzmaHeaderException : Exception
+	{
+		public WrongLzmaHeaderException(string message) : base(message)
+		{
 		}
 	}
 }
