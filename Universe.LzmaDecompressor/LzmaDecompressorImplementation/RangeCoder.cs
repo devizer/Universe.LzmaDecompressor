@@ -108,6 +108,5 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
             Normalize();
             return symbol;
         }
-
     }
 }

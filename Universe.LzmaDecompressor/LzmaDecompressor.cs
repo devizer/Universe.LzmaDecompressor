@@ -1,4 +1,4 @@
-﻿namespace Universe
+namespace Universe
 {
     using System;
     using System.IO;
