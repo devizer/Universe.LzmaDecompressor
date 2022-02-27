@@ -39,7 +39,5 @@ namespace LzmaDecompressor.Tests
 
             Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
         }
-
-
     }
 }
