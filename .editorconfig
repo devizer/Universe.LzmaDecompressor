@@ -3,6 +3,9 @@ root = true
 [*.cs]
 charset = utf-8
 insert_final_newline = true
+indent_style = tab
+indent_size = 4
+tab_width = 4
 
 # Microsoft .NET properties
 csharp_new_line_before_members_in_object_initializers = false
@@ -55,7 +58,7 @@ indent_style = tab
 indent_size = tab
 tab_width = 4
 
-[*.{appxmanifest,asax,ascx,aspx,axaml,axml,build,config,cs,cshtml,csproj,css,dbml,discomap,dtd,htm,html,js,json,jsproj,jsx,lsproj,master,njsproj,nuspec,paml,proj,props,razor,resjson,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
+[*.{appxmanifest,asax,ascx,aspx,axaml,axml,build,config,cshtml,csproj,css,dbml,discomap,dtd,htm,html,js,json,jsproj,jsx,lsproj,master,njsproj,nuspec,paml,proj,props,razor,resjson,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
 indent_style = space
 indent_size = 4
 tab_width = 4
