@@ -19,7 +19,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 			Code = 0;
 			Range = 0xFFFFFFFF;
-			for (var i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 				Code = (Code << 8) | (byte) Stream.ReadByte();
 		}
 
@@ -67,13 +67,13 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public uint DecodeDirectBits(int numTotalBits)
 		{
-			var range = Range;
-			var code = Code;
+			uint range = Range;
+			uint code = Code;
 			uint result = 0;
-			for (var i = numTotalBits; i > 0; i--)
+			for (int i = numTotalBits; i > 0; i--)
 			{
 				range >>= 1;
-				var t = (code - range) >> 31;
+				uint t = (code - range) >> 31;
 				code -= range & (t - 1);
 				result = (result << 1) | (1 - t);
 
@@ -91,7 +91,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public uint DecodeBit(uint size0, int numTotalBits)
 		{
-			var newBound = (Range >> numTotalBits) * size0;
+			uint newBound = (Range >> numTotalBits) * size0;
 			uint symbol;
 			if (Code < newBound)
 			{

@@ -20,7 +20,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 		public uint Decode(Decoder rangeDecoder)
 		{
 			uint m = 1;
-			for (var bitIndex = NumBitLevels; bitIndex > 0; bitIndex--)
+			for (int bitIndex = NumBitLevels; bitIndex > 0; bitIndex--)
 				m = (m << 1) + Models[m].Decode(rangeDecoder);
 			return m - ((uint) 1 << NumBitLevels);
 		}
@@ -29,9 +29,9 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 		{
 			uint m = 1;
 			uint symbol = 0;
-			for (var bitIndex = 0; bitIndex < NumBitLevels; bitIndex++)
+			for (int bitIndex = 0; bitIndex < NumBitLevels; bitIndex++)
 			{
-				var bit = Models[m].Decode(rangeDecoder);
+				uint bit = Models[m].Decode(rangeDecoder);
 				m <<= 1;
 				m += bit;
 				symbol |= bit << bitIndex;
@@ -45,9 +45,9 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 		{
 			uint m = 1;
 			uint symbol = 0;
-			for (var bitIndex = 0; bitIndex < NumBitLevels; bitIndex++)
+			for (int bitIndex = 0; bitIndex < NumBitLevels; bitIndex++)
 			{
-				var bit = Models[startIndex + m].Decode(rangeDecoder);
+				uint bit = Models[startIndex + m].Decode(rangeDecoder);
 				m <<= 1;
 				m += bit;
 				symbol |= bit << bitIndex;

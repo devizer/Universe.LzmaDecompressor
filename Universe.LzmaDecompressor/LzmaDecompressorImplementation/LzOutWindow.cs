@@ -36,17 +36,17 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 
 		public bool Train(Stream stream)
 		{
-			var len = stream.Length;
-			var size = len < _windowSize ? (uint) len : _windowSize;
+			long len = stream.Length;
+			uint size = len < _windowSize ? (uint) len : _windowSize;
 			TrainSize = size;
 			stream.Position = len - size;
 			_streamPos = _pos = 0;
 			while (size > 0)
 			{
-				var curSize = _windowSize - _pos;
+				uint curSize = _windowSize - _pos;
 				if (size < curSize)
 					curSize = size;
-				var numReadBytes = stream.Read(_buffer, (int) _pos, (int) curSize);
+				int numReadBytes = stream.Read(_buffer, (int) _pos, (int) curSize);
 				if (numReadBytes == 0)
 					return false;
 				size -= (uint) numReadBytes;
@@ -67,7 +67,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 
 		public void Flush()
 		{
-			var size = _pos - _streamPos;
+			uint size = _pos - _streamPos;
 			if (size == 0)
 				return;
 			_stream.Write(_buffer, (int) _streamPos, (int) size);
@@ -78,7 +78,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 
 		public void CopyBlock(uint distance, uint len)
 		{
-			var pos = _pos - distance - 1;
+			uint pos = _pos - distance - 1;
 			if (pos >= _windowSize)
 				pos += _windowSize;
 			for (; len > 0; len--)
@@ -100,7 +100,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 
 		public byte GetByte(uint distance)
 		{
-			var pos = _pos - distance - 1;
+			uint pos = _pos - distance - 1;
 			if (pos >= _windowSize)
 				pos += _windowSize;
 			return _buffer[pos];

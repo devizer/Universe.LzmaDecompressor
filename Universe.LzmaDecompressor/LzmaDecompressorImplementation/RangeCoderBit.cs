@@ -28,11 +28,11 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 		static BitEncoder()
 		{
 			const int kNumBits = kNumBitModelTotalBits - kNumMoveReducingBits;
-			for (var i = kNumBits - 1; i >= 0; i--)
+			for (int i = kNumBits - 1; i >= 0; i--)
 			{
-				var start = (uint) 1 << (kNumBits - i - 1);
-				var end = (uint) 1 << (kNumBits - i);
-				for (var j = start; j < end; j++)
+				uint start = (uint) 1 << (kNumBits - i - 1);
+				uint end = (uint) 1 << (kNumBits - i);
+				for (uint j = start; j < end; j++)
 					ProbPrices[j] = ((uint) i << kNumBitPriceShiftBits) +
 					                (((end - j) << kNumBitPriceShiftBits) >> (kNumBits - i - 1));
 			}
@@ -77,7 +77,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public uint Decode(Decoder rangeDecoder)
 		{
-			var newBound = (rangeDecoder.Range >> kNumBitModelTotalBits) * Prob;
+			uint newBound = (rangeDecoder.Range >> kNumBitModelTotalBits) * Prob;
 			if (rangeDecoder.Code < newBound)
 			{
 				rangeDecoder.Range = newBound;

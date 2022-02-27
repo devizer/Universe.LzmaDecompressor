@@ -40,7 +40,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		public Decoder()
 		{
 			m_DictionarySize = 0xFFFFFFFF;
-			for (var i = 0; i < Base.kNumLenToPosStates; i++)
+			for (int i = 0; i < Base.kNumLenToPosStates; i++)
 				m_PosSlotDecoder[i] = new BitTreeDecoder(Base.kNumPosSlotBits);
 		}
 
@@ -49,18 +49,18 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		{
 			Init(inStream, outStream);
 
-			var state = new Base.State();
+			Base.State state = new Base.State();
 			state.Init();
 			uint rep0 = 0, rep1 = 0, rep2 = 0, rep3 = 0;
 
 			ulong nowPos64 = 0;
-			var outSize64 = (ulong) outSize;
+			ulong outSize64 = (ulong) outSize;
 			if (nowPos64 < outSize64)
 			{
 				if (m_IsMatchDecoders[state.Index << Base.kNumPosStatesBitsMax].Decode(m_RangeDecoder) != 0)
 					throw new LzmaDataErrorException();
 				state.UpdateChar();
-				var b = m_LiteralDecoder.DecodeNormal(m_RangeDecoder, 0, 0);
+				byte b = m_LiteralDecoder.DecodeNormal(m_RangeDecoder, 0, 0);
 				m_OutWindow.PutByte(b);
 				nowPos64++;
 			}
@@ -69,12 +69,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 				// UInt64 next = Math.Min(nowPos64 + (1 << 18), outSize64);
 				// while(nowPos64 < next)
 			{
-				var posState = (uint) nowPos64 & m_PosStateMask;
+				uint posState = (uint) nowPos64 & m_PosStateMask;
 				if (m_IsMatchDecoders[(state.Index << Base.kNumPosStatesBitsMax) + posState].Decode(m_RangeDecoder) ==
 				    0)
 				{
 					byte b;
-					var prevByte = m_OutWindow.GetByte(0);
+					byte prevByte = m_OutWindow.GetByte(0);
 					if (!state.IsCharState())
 						b = m_LiteralDecoder.DecodeWithMatchByte(m_RangeDecoder,
 							(uint) nowPos64, prevByte, m_OutWindow.GetByte(rep0));
@@ -136,10 +136,10 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 						rep1 = rep0;
 						len = Base.kMatchMinLen + m_LenDecoder.Decode(m_RangeDecoder, posState);
 						state.UpdateMatch();
-						var posSlot = m_PosSlotDecoder[Base.GetLenToPosState(len)].Decode(m_RangeDecoder);
+						uint posSlot = m_PosSlotDecoder[Base.GetLenToPosState(len)].Decode(m_RangeDecoder);
 						if (posSlot >= Base.kStartPosModelIndex)
 						{
-							var numDirectBits = (int) ((posSlot >> 1) - 1);
+							int numDirectBits = (int) ((posSlot >> 1) - 1);
 							rep0 = (2 | (posSlot & 1)) << numDirectBits;
 							if (posSlot < Base.kEndPosModelIndex)
 							{
@@ -180,14 +180,14 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		{
 			if (properties.Length < 5)
 				throw new InvalidLzmaParameterException();
-			var lc = properties[0] % 9;
-			var remainder = properties[0] / 9;
-			var lp = remainder % 5;
-			var pb = remainder / 5;
+			int lc = properties[0] % 9;
+			int remainder = properties[0] / 9;
+			int lp = remainder % 5;
+			int pb = remainder / 5;
 			if (pb > Base.kNumPosStatesBitsMax)
 				throw new InvalidLzmaParameterException();
 			uint dictionarySize = 0;
-			for (var i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 				dictionarySize += (uint) properties[1 + i] << (i * 8);
 			SetDictionarySize(dictionarySize);
 			SetLiteralProperties(lp, lc);
@@ -200,7 +200,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			{
 				m_DictionarySize = dictionarySize;
 				m_DictionarySizeCheck = Math.Max(m_DictionarySize, 1);
-				var blockSize = Math.Max(m_DictionarySizeCheck, 1 << 12);
+				uint blockSize = Math.Max(m_DictionarySizeCheck, 1 << 12);
 				m_OutWindow.Create(blockSize);
 			}
 		}
@@ -218,7 +218,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		{
 			if (pb > Base.kNumPosStatesBitsMax)
 				throw new InvalidLzmaParameterException();
-			var numPosStates = (uint) 1 << pb;
+			uint numPosStates = (uint) 1 << pb;
 			m_LenDecoder.Create(numPosStates);
 			m_RepLenDecoder.Create(numPosStates);
 			m_PosStateMask = numPosStates - 1;
@@ -234,7 +234,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			{
 				for (uint j = 0; j <= m_PosStateMask; j++)
 				{
-					var index = (i << Base.kNumPosStatesBitsMax) + j;
+					uint index = (i << Base.kNumPosStatesBitsMax) + j;
 					m_IsMatchDecoders[index].Init();
 					m_IsRep0LongDecoders[index].Init();
 				}
@@ -268,7 +268,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 
 			public void Create(uint numPosStates)
 			{
-				for (var posState = m_NumPosStates; posState < numPosStates; posState++)
+				for (uint posState = m_NumPosStates; posState < numPosStates; posState++)
 				{
 					m_LowCoder[posState] = new BitTreeDecoder(Base.kNumLowLenBits);
 					m_MidCoder[posState] = new BitTreeDecoder(Base.kNumMidLenBits);
@@ -294,7 +294,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			{
 				if (m_Choice.Decode(rangeDecoder) == 0) return m_LowCoder[posState].Decode(rangeDecoder);
 
-				var symbol = Base.kNumLowLenSymbols;
+				uint symbol = Base.kNumLowLenSymbols;
 				if (m_Choice2.Decode(rangeDecoder) == 0)
 				{
 					symbol += m_MidCoder[posState].Decode(rangeDecoder);
@@ -324,7 +324,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 				m_NumPosBits = numPosBits;
 				m_PosMask = ((uint) 1 << numPosBits) - 1;
 				m_NumPrevBits = numPrevBits;
-				var numStates = (uint) 1 << (m_NumPrevBits + m_NumPosBits);
+				uint numStates = (uint) 1 << (m_NumPrevBits + m_NumPosBits);
 				m_Coders = new Decoder2[numStates];
 				for (uint i = 0; i < numStates; i++)
 					m_Coders[i].Create();
@@ -332,7 +332,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 
 			public void Init()
 			{
-				var numStates = (uint) 1 << (m_NumPrevBits + m_NumPosBits);
+				uint numStates = (uint) 1 << (m_NumPrevBits + m_NumPosBits);
 				for (uint i = 0; i < numStates; i++)
 					m_Coders[i].Init();
 			}
@@ -363,7 +363,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 
 				public void Init()
 				{
-					for (var i = 0; i < 0x300; i++) m_Decoders[i].Init();
+					for (int i = 0; i < 0x300; i++) m_Decoders[i].Init();
 				}
 
 				public byte DecodeNormal(RangeCoder.Decoder rangeDecoder)
@@ -382,9 +382,9 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 					uint symbol = 1;
 					do
 					{
-						var matchBit = (uint) (matchByte >> 7) & 1;
+						uint matchBit = (uint) (matchByte >> 7) & 1;
 						matchByte <<= 1;
-						var bit = m_Decoders[((1 + matchBit) << 8) + symbol].Decode(rangeDecoder);
+						uint bit = m_Decoders[((1 + matchBit) << 8) + symbol].Decode(rangeDecoder);
 						symbol = (symbol << 1) | bit;
 						if (matchBit != bit)
 						{
