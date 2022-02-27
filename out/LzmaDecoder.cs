@@ -53,7 +53,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
         }
     }
 
-    public interface ICodeProgress
+    internal interface ICodeProgress
     {
         /// <summary>
         ///     Callback progress.
@@ -67,7 +67,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
         void SetProgress(long inSize, long outSize);
     }
 
-    public interface ICoder
+    internal interface ICoder
     {
         /// <summary>
         ///     Codes streams.
@@ -291,7 +291,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
     using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ;
     using Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCoder;
 
-    public class Decoder : ICoder, ISetDecoderProperties // ,System.IO.Stream
+    internal class Decoder : ICoder, ISetDecoderProperties // ,System.IO.Stream
     {
         private readonly BitDecoder[] m_IsMatchDecoders = new BitDecoder[Base.kNumStates << Base.kNumPosStatesBitsMax];
 
@@ -690,7 +690,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 {
     using System.IO;
 
-    public class OutWindow
+    internal class OutWindow
     {
         private byte[] _buffer;
         private uint _pos;
