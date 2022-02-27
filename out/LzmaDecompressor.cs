@@ -314,7 +314,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
         private readonly RangeCoder.Decoder m_RangeDecoder = new RangeCoder.Decoder();
         private readonly LenDecoder m_RepLenDecoder = new LenDecoder();
 
-        private bool _solid;
+        // private bool _solid;
 
         private uint m_DictionarySize;
         private uint m_DictionarySizeCheck;
@@ -513,7 +513,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
         private void Init(Stream inStream, Stream outStream)
         {
             m_RangeDecoder.Init(inStream);
-            m_OutWindow.Init(outStream, _solid);
+            m_OutWindow.Init(outStream, false);
 
             uint i;
             for (i = 0; i < Base.kNumStates; i++)

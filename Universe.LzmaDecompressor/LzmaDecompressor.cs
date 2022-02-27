@@ -4,7 +4,7 @@ namespace Universe
     using System.IO;
     using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
-    public class LzmaDecoder
+    public class LzmaDecompressor
     {
         public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
         {

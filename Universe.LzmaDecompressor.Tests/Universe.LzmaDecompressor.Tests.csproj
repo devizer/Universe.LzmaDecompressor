@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <AssemblyName>LzmaDecompressor.Tests</AssemblyName>
+
+    <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
   </PropertyGroup>
 
   <Import Project="..\Shared-Files\NUnit-Platform.props" />

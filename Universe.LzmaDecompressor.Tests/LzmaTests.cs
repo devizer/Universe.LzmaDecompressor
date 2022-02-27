@@ -1,10 +1,10 @@
-namespace Universe.LzmaDecompressor.Tests
+namespace LzmaDecompressor.Tests
 {
     using System;
-    using System.Buffers.Text;
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
+    using Universe;
     using Universe.NUnitTests;
 
     public class LzmaTests : NUnitTestsBase
@@ -29,7 +29,7 @@ namespace Universe.LzmaDecompressor.Tests
             MemoryStream actual = new MemoryStream();
             using (FileStream compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                Universe.LzmaDecoder.LzmaDecompressTo(compressed, actual);
+                LzmaDecompressor.LzmaDecompressTo(compressed, actual);
             }
 
             Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
