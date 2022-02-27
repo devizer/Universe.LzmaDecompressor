@@ -2,7 +2,6 @@ namespace Universe
 {
 	using System.IO;
 	using Universe.LzmaDecompressionImplementation;
-	using Universe.LzmaDecompressionImplementation.SevenZip;
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
 	public class LzmaDecompressor
