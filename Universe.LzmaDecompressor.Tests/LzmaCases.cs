@@ -3,6 +3,7 @@ namespace LzmaDecompressor.Tests
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using System.Drawing;
 	using System.IO;
 	using System.Linq;
 	using KernelManagementJam.Benchmarks;
@@ -35,9 +36,10 @@ namespace LzmaDecompressor.Tests
 				ret.Add(lzmaCase);
 			}
 
+			foreach(var size in new[] { 10000000 , 100000000})
 			ret.Add(new LzmaCase()
 			{
-				Size = 10000000,
+				Size = size,
 				Level = 1,
 				Content = null
 			});
