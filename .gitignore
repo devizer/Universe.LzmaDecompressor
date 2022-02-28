@@ -351,3 +351,4 @@ MigrationBackup/
 /out/LzmaDecoder-net-4.0.dll
 /out/LzmaDecompressor-net-4.0.dll
 /out/Standalone.LzmaDecompressor.cs-net-*.dll
+/out/Universe.LzmaDecompressor.cs-net-*.dll
