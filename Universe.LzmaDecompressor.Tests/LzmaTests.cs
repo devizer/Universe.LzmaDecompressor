@@ -41,12 +41,14 @@ namespace LzmaDecompressor.Tests
 				fs.CopyTo(expected);
 			}
 
+			bool hasProgressNotification = false;
 			var actual = new MemoryStream();
 			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 			{
 				void ShowProgress(LzmaDecompressor.Progress info)
 				{
 					Console.WriteLine($"Progress: {info}");
+					hasProgressNotification = true;
 				}
 
 				var step = lzmaCase.Size >= 100000 ? lzmaCase.Size / 10 : 4000;
@@ -60,6 +62,9 @@ namespace LzmaDecompressor.Tests
 			}
 
 			Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
+			if (lzmaCase.Size >= 10000)
+				Assert.IsTrue(hasProgressNotification, "Tests sized over 10,000 bytes should have progress notification");
+
 		}
 	}
 }

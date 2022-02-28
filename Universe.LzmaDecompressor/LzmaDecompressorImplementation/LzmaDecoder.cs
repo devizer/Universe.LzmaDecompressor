@@ -177,7 +177,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 				if (needProgress && nowPos64 - prevProgress > stepBytesProgress)
 				{
 					prevProgress = nowPos64;
-					progressOptions.NotifyProgress(new LzmaDecompressor.Progress() {Current = nowPos64});
+					progressOptions.NotifyProgress(new LzmaDecompressor.Progress(nowPos64));
 				}
 			}
 

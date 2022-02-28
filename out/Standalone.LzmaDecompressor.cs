@@ -1,12 +1,46 @@
 namespace Universe
 {
+	using System;
 	using System.IO;
 	using Universe.LzmaDecompressionImplementation;
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
 	public class LzmaDecompressor
 	{
+		public class ProgressOptions
+		{
+			public int Milliseconds = 900;
+			public int Bytes = 1024 * 1024;
+			public Action<Progress> NotifyProgress;
+		}
+
+		public class Progress
+		{
+			public ulong Current;
+
+			public Progress()
+			{
+			}
+
+			public Progress(ulong current)
+			{
+				Current = current;
+			}
+
+			public override string ToString()
+			{
+				return Current.ToString("n0");
+			}
+		}
+
+
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
+		{
+			LzmaDecompressTo(inStream, plainStream, null);
+		}
+
+
+		public static void LzmaDecompressTo(Stream inStream, Stream plainStream, /* Nullable*/ ProgressOptions progressOptions)
 		{
 			byte[] properties = new byte[5];
 			// a stream can returns 5 bytes in 2+ calls, but FileStream never
@@ -34,7 +68,7 @@ namespace Universe
 			}
 
 			long compressedSize = inStream.Length - inStream.Position;
-			decoder.Code(inStream, plainStream, compressedSize, outSize, null);
+			decoder.Code(inStream, plainStream, compressedSize, outSize, progressOptions);
 		}
 	}
 }
@@ -42,18 +76,10 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 {
 	using System.IO;
 
+
 	internal interface ICodeProgress
 	{
-		/// <summary>
-		///     Callback progress.
-		/// </summary>
-		/// <param name="inSize">
-		///     input size. -1 if unknown.
-		/// </param>
-		/// <param name="outSize">
-		///     output size. -1 if unknown.
-		/// </param>
-		void SetProgress(long inSize, long outSize);
+		void SetProgress(ulong current, ulong total);
 	}
 
 	internal interface ICoder
@@ -73,14 +99,14 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 		/// <param name="outSize">
 		///     output Size. -1 if unknown.
 		/// </param>
-		/// <param name="progress">
+		/// <param name="progressOptions">
 		///     callback progress reference.
 		/// </param>
 		/// <exception cref="LzmaDataErrorException">
 		///     if input stream is not valid
 		/// </exception>
 		void Code(Stream inStream, Stream outStream,
-			long inSize, long outSize, ICodeProgress progress);
+			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions);
 	}
 
 	/// <summary>
@@ -320,8 +346,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		}
 
 		public void Code(Stream inStream, Stream outStream,
-			long inSize, long outSize, ICodeProgress progress)
+			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions)
 		{
+			bool needProgress = progressOptions != null && progressOptions.NotifyProgress != null;
+			ulong stepBytesProgress = needProgress ? (ulong) progressOptions.Bytes : 0;
+			ulong prevProgress = 0;
+
 			Init(inStream, outStream);
 
 			Base.State state = new Base.State();
@@ -443,6 +473,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 
 					m_OutWindow.CopyBlock(rep0, len);
 					nowPos64 += len;
+				}
+
+				if (needProgress && nowPos64 - prevProgress > stepBytesProgress)
+				{
+					prevProgress = nowPos64;
+					progressOptions.NotifyProgress(new LzmaDecompressor.Progress(nowPos64));
 				}
 			}
 

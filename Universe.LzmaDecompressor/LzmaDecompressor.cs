@@ -3,7 +3,6 @@ namespace Universe
 	using System;
 	using System.IO;
 	using Universe.LzmaDecompressionImplementation;
-	using Universe.LzmaDecompressionImplementation.SevenZip;
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA;
 
 	public class LzmaDecompressor
@@ -17,11 +16,20 @@ namespace Universe
 
 		public class Progress
 		{
-			public ulong Current { get; set; }
+			public ulong Current;
+
+			public Progress()
+			{
+			}
+
+			public Progress(ulong current)
+			{
+				Current = current;
+			}
 
 			public override string ToString()
 			{
-				return $"{Current:n0}";
+				return Current.ToString("n0");
 			}
 		}
 
