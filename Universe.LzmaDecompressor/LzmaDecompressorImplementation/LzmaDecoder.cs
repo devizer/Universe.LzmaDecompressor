@@ -45,8 +45,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		}
 
 		public void Code(Stream inStream, Stream outStream,
-			long inSize, long outSize, ICodeProgress progress)
+			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions)
 		{
+			bool needProgress = progressOptions != null && progressOptions.NotifyProgress != null;
+			ulong stepBytesProgress = needProgress ? (ulong) progressOptions.Bytes : 0;
+			ulong prevProgress = 0;
+
 			Init(inStream, outStream);
 
 			Base.State state = new Base.State();
@@ -168,6 +172,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 
 					m_OutWindow.CopyBlock(rep0, len);
 					nowPos64 += len;
+				}
+
+				if (needProgress && nowPos64 - prevProgress > stepBytesProgress)
+				{
+					prevProgress = nowPos64;
+					progressOptions.NotifyProgress(new LzmaDecompressor.Progress() {Current = nowPos64});
 				}
 			}
 

@@ -1,28 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
 
-    <IsPackable>false</IsPackable>
+        <IsPackable>false</IsPackable>
 
-    <AssemblyName>LzmaDecompressor.Tests</AssemblyName>
+        <AssemblyName>LzmaDecompressor.Tests</AssemblyName>
 
-    <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
-  </PropertyGroup>
+        <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
+    </PropertyGroup>
 
-  <Import Project="..\Shared-Files\NUnit-Platform.props" />
+    <Import Project="..\Shared-Files\NUnit-Platform.props" />
 
-  <ItemGroup>
-    <Content Include="Binaries/**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="Binaries/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Universe.LzmaDecompressor\Universe.LzmaDecompressor.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Universe.LzmaDecompressor\Universe.LzmaDecompressor.csproj" />
+    </ItemGroup>
 
-  <!--
+    <!--
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="NUnit" Version="3.13.1" />

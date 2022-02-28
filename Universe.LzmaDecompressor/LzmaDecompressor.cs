@@ -8,34 +8,23 @@ namespace Universe
 
 	public class LzmaDecompressor
 	{
+		public class ProgressOptions
+		{
+			public int Milliseconds = 900;
+			public int Bytes = 1024 * 1024;
+			public Action<Progress> NotifyProgress;
+		}
+
 		public class Progress
 		{
-			public long Compressed { get; set; }
-			public long Plain { get; set; }
-			public long TotalPlain { get; set; }
+			public ulong Current { get; set; }
 
 			public override string ToString()
 			{
-				return $"{nameof(Compressed)}: {Compressed}, {nameof(Plain)}: {Plain}, {nameof(TotalPlain)}: {TotalPlain}";
+				return $"{Current:n0}";
 			}
 		}
 
-
-		internal class CustomProgress : ICodeProgress
-		{
-			public Action<Progress> ProgressCallback;
-			public long TotalPlain { get; set; }
-			public void SetProgress(long inSize, long outSize)
-			{
-				if (ProgressCallback != null)
-					ProgressCallback(new Progress()
-					{
-						Compressed = inSize,
-						Plain = outSize,
-						TotalPlain = TotalPlain
-					});
-			}
-		}
 
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
 		{
@@ -43,7 +32,7 @@ namespace Universe
 		}
 
 
-		public static void LzmaDecompressTo(Stream inStream, Stream plainStream, /* Nullable*/ Action<Progress> progressCallback)
+		public static void LzmaDecompressTo(Stream inStream, Stream plainStream, /* Nullable*/ ProgressOptions progressOptions)
 		{
 			byte[] properties = new byte[5];
 			// a stream can returns 5 bytes in 2+ calls, but FileStream never
@@ -71,13 +60,7 @@ namespace Universe
 			}
 
 			long compressedSize = inStream.Length - inStream.Position;
-			CustomProgress progressNotifier = null;
-			if (progressCallback != null)
-			{
-				progressNotifier = new CustomProgress() {TotalPlain = outSize, ProgressCallback = progressCallback};
-			}
-			decoder.Code(inStream, plainStream, compressedSize, outSize, progressNotifier);
+			decoder.Code(inStream, plainStream, compressedSize, outSize, progressOptions);
 		}
 	}
-
 }

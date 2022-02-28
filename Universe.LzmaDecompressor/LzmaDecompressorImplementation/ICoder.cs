@@ -2,18 +2,10 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 {
 	using System.IO;
 
+
 	internal interface ICodeProgress
 	{
-		/// <summary>
-		///     Callback progress.
-		/// </summary>
-		/// <param name="inSize">
-		///     input size. -1 if unknown.
-		/// </param>
-		/// <param name="outSize">
-		///     output size. -1 if unknown.
-		/// </param>
-		void SetProgress(long inSize, long outSize);
+		void SetProgress(ulong current, ulong total);
 	}
 
 	internal interface ICoder
@@ -33,14 +25,14 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 		/// <param name="outSize">
 		///     output Size. -1 if unknown.
 		/// </param>
-		/// <param name="progress">
+		/// <param name="progressOptions">
 		///     callback progress reference.
 		/// </param>
 		/// <exception cref="LzmaDataErrorException">
 		///     if input stream is not valid
 		/// </exception>
 		void Code(Stream inStream, Stream outStream,
-			long inSize, long outSize, ICodeProgress progress);
+			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions);
 	}
 
 	/// <summary>
