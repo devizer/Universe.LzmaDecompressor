@@ -10,6 +10,10 @@
         <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
     <Import Project="..\Shared-Files\NUnit-Platform.props" />
 
     <ItemGroup>

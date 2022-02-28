@@ -5,6 +5,7 @@ namespace LzmaDecompressor.Tests
 	using System.Diagnostics;
 	using System.IO;
 	using System.Linq;
+	using KernelManagementJam.Benchmarks;
 	using Universe;
 
 	public class LzmaCases
@@ -60,7 +61,12 @@ namespace LzmaDecompressor.Tests
 				if (lzmaCase.Content.HasValue)
 					content = Enumerable.Repeat((byte) lzmaCase.Content.Value, lzmaCase.Size).ToArray();
 				else
-					content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte) rnd.Next(65, 90)).ToArray();
+				{
+					content = new byte[lzmaCase.Size];
+					XorShiftRandom.FillByteArray(content, 42);
+					for (int i = 0; i < lzmaCase.Size; i++) content[i] = (byte) (33 + (content[i] & 0x1F));
+					// content = Enumerable.Repeat(42, lzmaCase.Size).Select(x => (byte) rnd.Next(65, 90)).ToArray();
+				}
 
 				using (var fs = new FileStream(lzmaCase.PlainFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
 				{
