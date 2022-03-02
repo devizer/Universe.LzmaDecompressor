@@ -1,0 +1,39 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - '**'
+
+jobs:
+
+- job: 'Tests'
+  pool:
+    vmImage: 'ubuntu-20.04'
+  timeoutInMinutes: 360
+  strategy:
+    maxParallel: 9  
+    matrix:
+      'windows':
+        image: windows-latest
+      'linux':
+        image: ubuntu-latest
+      'maxos':
+        image: macod-latest
+
+  steps:
+  - bash: |
+      set -eu; set -o pipefail
+      cd Universe.LzmaDecompressor.Tests
+      dotnet test -c Release |& tee $(System.ARTIFACTSDIRECTORY)/test.log
+    displayName: 'Tests'
+
+
+  - task: PublishBuildArtifacts@1
+    condition: succeededOrFailed()
+    displayName: 'Publish'
+    inputs:
+      pathtoPublish: '$(System.ARTIFACTSDIRECTORY)'
+      artifactName: '$(Agent.JobName)'
+
