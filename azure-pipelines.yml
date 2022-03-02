@@ -29,10 +29,10 @@ jobs:
         image: macOS-10.15
 
   steps:
-  - script: |
+  - bash: |
       set -eu; set -o pipefail
       cd Universe.LzmaDecompressor.Tests
-      dotnet test -c Release 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
+      dotnet test -c Release # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
     displayName: 'Tests'
 
 
