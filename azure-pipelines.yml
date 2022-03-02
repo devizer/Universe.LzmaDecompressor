@@ -10,7 +10,7 @@ jobs:
 
 - job: 'Tests'
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: $(image)
   timeoutInMinutes: 360
   strategy:
     maxParallel: 9  
