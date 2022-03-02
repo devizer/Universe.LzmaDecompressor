@@ -15,12 +15,18 @@ jobs:
   strategy:
     maxParallel: 9  
     matrix:
-      'windows':
-        image: windows-latest
-      'linux':
-        image: ubuntu-latest
-      'maxos':
-        image: macod-latest
+      'windows-2022':
+        image: windows-2022
+      'windows-2019':
+        image: windows-2019
+      'ubuntu-18.04':
+        image: ubuntu-18.04
+      'ubuntu-20.04':
+        image: ubuntu-20.04
+      'macOS-11':
+        image: macOS-11
+      'macOS-10.15':
+        image: macOS-10.15
 
   steps:
   - bash: |
