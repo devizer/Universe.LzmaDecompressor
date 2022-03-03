@@ -109,98 +109,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip
 			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions);
 	}
 
-	/// <summary>
-	///     Provides the fields that represent properties idenitifiers for compressing.
-	/// </summary>
-	public enum CoderPropID
-	{
-		/// <summary>
-		///     Specifies default property.
-		/// </summary>
-		DefaultProp = 0,
-
-		/// <summary>
-		///     Specifies size of dictionary.
-		/// </summary>
-		DictionarySize,
-
-		/// <summary>
-		///     Specifies size of memory for PPM*.
-		/// </summary>
-		UsedMemorySize,
-
-		/// <summary>
-		///     Specifies order for PPM methods.
-		/// </summary>
-		Order,
-
-		/// <summary>
-		///     Specifies Block Size.
-		/// </summary>
-		BlockSize,
-
-		/// <summary>
-		///     Specifies number of postion state bits for LZMA (0 <= x <= 4).
-		/// </summary>
-		PosStateBits,
-
-		/// <summary>
-		///     Specifies number of literal context bits for LZMA (0 <= x <= 8).
-		/// </summary>
-		LitContextBits,
-
-		/// <summary>
-		///     Specifies number of literal position bits for LZMA (0 <= x <= 4).
-		/// </summary>
-		LitPosBits,
-
-		/// <summary>
-		///     Specifies number of fast bytes for LZ*.
-		/// </summary>
-		NumFastBytes,
-
-		/// <summary>
-		///     Specifies match finder. LZMA: "BT2", "BT4" or "BT4B".
-		/// </summary>
-		MatchFinder,
-
-		/// <summary>
-		///     Specifies the number of match finder cyckes.
-		/// </summary>
-		MatchFinderCycles,
-
-		/// <summary>
-		///     Specifies number of passes.
-		/// </summary>
-		NumPasses,
-
-		/// <summary>
-		///     Specifies number of algorithm.
-		/// </summary>
-		Algorithm,
-
-		/// <summary>
-		///     Specifies the number of threads.
-		/// </summary>
-		NumThreads,
-
-		/// <summary>
-		///     Specifies mode with end marker.
-		/// </summary>
-		EndMarker
-	}
-
-
-	public interface ISetCoderProperties
-	{
-		void SetCoderProperties(CoderPropID[] propIDs, object[] properties);
-	}
-
-	public interface IWriteCoderProperties
-	{
-		void WriteCoderProperties(Stream outStream);
-	}
-
 	public interface ISetDecoderProperties
 	{
 		void SetDecoderProperties(byte[] properties);
@@ -778,31 +686,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ
 			}
 		}
 
-		public bool Train(Stream stream)
-		{
-			long len = stream.Length;
-			uint size = len < _windowSize ? (uint) len : _windowSize;
-			TrainSize = size;
-			stream.Position = len - size;
-			_streamPos = _pos = 0;
-			while (size > 0)
-			{
-				uint curSize = _windowSize - _pos;
-				if (size < curSize)
-					curSize = size;
-				int numReadBytes = stream.Read(_buffer, (int) _pos, (int) curSize);
-				if (numReadBytes == 0)
-					return false;
-				size -= (uint) numReadBytes;
-				_pos += (uint) numReadBytes;
-				_streamPos += (uint) numReadBytes;
-				if (_pos == _windowSize)
-					_streamPos = _pos = 0;
-			}
-
-			return true;
-		}
-
 		public void ReleaseStream()
 		{
 			Flush();
@@ -862,12 +745,10 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public uint Range;
 
-		// public Buffer.InBuffer Stream = new Buffer.InBuffer(1 << 16);
 		public Stream Stream;
 
 		public void Init(Stream stream)
 		{
-			// Stream.Init(stream);
 			Stream = stream;
 
 			Code = 0;
@@ -878,44 +759,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public void ReleaseStream()
 		{
-			// Stream.ReleaseStream();
 			Stream = null;
 		}
 
 		public void CloseStream()
 		{
-			// Stream.Close();
 			Stream.Dispose();
-		}
-
-		public void Normalize()
-		{
-			while (Range < kTopValue)
-			{
-				Code = (Code << 8) | (byte) Stream.ReadByte();
-				Range <<= 8;
-			}
-		}
-
-		public void Normalize2()
-		{
-			if (Range < kTopValue)
-			{
-				Code = (Code << 8) | (byte) Stream.ReadByte();
-				Range <<= 8;
-			}
-		}
-
-		public uint GetThreshold(uint total)
-		{
-			return Code / (Range /= total);
-		}
-
-		public void Decode(uint start, uint size, uint total)
-		{
-			Code -= start * Range;
-			Range *= size;
-			Normalize();
 		}
 
 		public uint DecodeDirectBits(int numTotalBits)
@@ -942,25 +791,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 			return result;
 		}
 
-		public uint DecodeBit(uint size0, int numTotalBits)
-		{
-			uint newBound = (Range >> numTotalBits) * size0;
-			uint symbol;
-			if (Code < newBound)
-			{
-				symbol = 0;
-				Range = newBound;
-			}
-			else
-			{
-				symbol = 1;
-				Code -= newBound;
-				Range -= newBound;
-			}
-
-			Normalize();
-			return symbol;
-		}
 	}
 }
 namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCoder
@@ -973,14 +803,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 		private const int kNumMoveBits = 5;
 
 		private uint Prob;
-
-		public void UpdateModel(int numMoveBits, uint symbol)
-		{
-			if (symbol == 0)
-				Prob += (kBitModelTotal - Prob) >> numMoveBits;
-			else
-				Prob -= Prob >> numMoveBits;
-		}
 
 		public void Init()
 		{
