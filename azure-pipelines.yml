@@ -32,6 +32,7 @@ jobs:
   - bash: |
       set -eu; set -o pipefail
       echo "BASH_VERSION: $BASH_VERSION"
+      echo "CURL Version: $(curl --version)"
       dotnet --info
       cd Universe.LzmaDecompressor.Tests
       dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
@@ -42,7 +43,6 @@ jobs:
     condition: succeededOrFailed()
     displayName: 'Publish'
     inputs:
-      # pathtoPublish: '$(System.ARTIFACTSDIRECTORY)'
       pathtoPublish: '$(Build.SourcesDirectory)'
       artifactName: '$(Agent.JobName)'
 
