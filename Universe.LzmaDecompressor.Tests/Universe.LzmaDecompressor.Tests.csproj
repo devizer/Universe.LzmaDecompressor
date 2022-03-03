@@ -2,11 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-
         <IsPackable>false</IsPackable>
-
         <AssemblyName>LzmaDecompressor.Tests</AssemblyName>
-
         <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
     </PropertyGroup>
 
@@ -24,6 +21,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Universe.LzmaDecompressor\Universe.LzmaDecompressor.csproj" />
+        <PackageReference Include="coverlet.collector" Version="1.2.0" />
+
     </ItemGroup>
 
     <!--

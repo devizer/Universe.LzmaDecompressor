@@ -33,11 +33,11 @@ jobs:
       set -eu; set -o pipefail
       dotnet --info
       cd Universe.LzmaDecompressor.Tests
-      dotnet test -c Release # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
+      dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
     displayName: 'Tests'
 
 
-  - task: PublishBuildArtifacts@1
+  - task: PublishBuildAr tifacts@1
     condition: succeededOrFailed()
     displayName: 'Publish'
     inputs:
