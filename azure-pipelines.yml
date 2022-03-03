@@ -37,7 +37,7 @@ jobs:
     displayName: 'Tests'
 
 
-  - task: PublishBuildAr tifacts@1
+  - task: PublishBuildArtifacts@1
     condition: succeededOrFailed()
     displayName: 'Publish'
     inputs:
