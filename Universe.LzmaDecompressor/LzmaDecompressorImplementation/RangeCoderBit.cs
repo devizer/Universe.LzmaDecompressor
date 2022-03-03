@@ -9,14 +9,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		private uint Prob;
 
-		public void UpdateModel(int numMoveBits, uint symbol)
-		{
-			if (symbol == 0)
-				Prob += (kBitModelTotal - Prob) >> numMoveBits;
-			else
-				Prob -= Prob >> numMoveBits;
-		}
-
 		public void Init()
 		{
 			Prob = kBitModelTotal >> 1;
