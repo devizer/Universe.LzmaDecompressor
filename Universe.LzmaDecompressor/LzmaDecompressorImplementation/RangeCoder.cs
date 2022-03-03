@@ -9,12 +9,10 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public uint Range;
 
-		// public Buffer.InBuffer Stream = new Buffer.InBuffer(1 << 16);
 		public Stream Stream;
 
 		public void Init(Stream stream)
 		{
-			// Stream.Init(stream);
 			Stream = stream;
 
 			Code = 0;
@@ -25,44 +23,12 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 
 		public void ReleaseStream()
 		{
-			// Stream.ReleaseStream();
 			Stream = null;
 		}
 
 		public void CloseStream()
 		{
-			// Stream.Close();
 			Stream.Dispose();
-		}
-
-		public void Normalize()
-		{
-			while (Range < kTopValue)
-			{
-				Code = (Code << 8) | (byte) Stream.ReadByte();
-				Range <<= 8;
-			}
-		}
-
-		public void Normalize2()
-		{
-			if (Range < kTopValue)
-			{
-				Code = (Code << 8) | (byte) Stream.ReadByte();
-				Range <<= 8;
-			}
-		}
-
-		public uint GetThreshold(uint total)
-		{
-			return Code / (Range /= total);
-		}
-
-		public void Decode(uint start, uint size, uint total)
-		{
-			Code -= start * Range;
-			Range *= size;
-			Normalize();
 		}
 
 		public uint DecodeDirectBits(int numTotalBits)
@@ -89,24 +55,5 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCod
 			return result;
 		}
 
-		public uint DecodeBit(uint size0, int numTotalBits)
-		{
-			uint newBound = (Range >> numTotalBits) * size0;
-			uint symbol;
-			if (Code < newBound)
-			{
-				symbol = 0;
-				Range = newBound;
-			}
-			else
-			{
-				symbol = 1;
-				Code -= newBound;
-				Range -= newBound;
-			}
-
-			Normalize();
-			return symbol;
-		}
 	}
 }
