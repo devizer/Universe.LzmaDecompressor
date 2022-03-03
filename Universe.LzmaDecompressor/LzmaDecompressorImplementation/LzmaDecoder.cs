@@ -5,7 +5,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZ;
 	using Universe.LzmaDecompressionImplementation.SevenZip.Compression.RangeCoder;
 
-	internal class Decoder : ICoder, ISetDecoderProperties // ,System.IO.Stream
+	internal class Decoder
 	{
 		private readonly BitDecoder[] m_IsMatchDecoders = new BitDecoder[Base.kNumStates << Base.kNumPosStatesBitsMax];
 
