@@ -8,8 +8,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		public const int kNumPosSlotBits = 6;
 
 		public const int kDicLogSizeMin = 0;
-		// public const int kDicLogSizeMax = 30;
-		// public const uint kDistTableSizeMax = kDicLogSizeMax * 2;
 
 		public const int kNumLenToPosStatesBits = 2; // it's for speed optimization
 		public const uint kNumLenToPosStates = 1 << kNumLenToPosStatesBits;

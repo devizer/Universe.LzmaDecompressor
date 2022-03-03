@@ -28,8 +28,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		private readonly RangeCoder.Decoder m_RangeDecoder = new RangeCoder.Decoder();
 		private readonly LenDecoder m_RepLenDecoder = new LenDecoder();
 
-		// private bool _solid;
-
 		private uint m_DictionarySize;
 		private uint m_DictionarySizeCheck;
 

@@ -82,8 +82,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		public const int kNumPosSlotBits = 6;
 
 		public const int kDicLogSizeMin = 0;
-		// public const int kDicLogSizeMax = 30;
-		// public const uint kDistTableSizeMax = kDicLogSizeMax * 2;
 
 		public const int kNumLenToPosStatesBits = 2; // it's for speed optimization
 		public const uint kNumLenToPosStates = 1 << kNumLenToPosStatesBits;
@@ -194,8 +192,6 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 		private readonly BitTreeDecoder[] m_PosSlotDecoder = new BitTreeDecoder[Base.kNumLenToPosStates];
 		private readonly RangeCoder.Decoder m_RangeDecoder = new RangeCoder.Decoder();
 		private readonly LenDecoder m_RepLenDecoder = new LenDecoder();
-
-		// private bool _solid;
 
 		private uint m_DictionarySize;
 		private uint m_DictionarySizeCheck;
