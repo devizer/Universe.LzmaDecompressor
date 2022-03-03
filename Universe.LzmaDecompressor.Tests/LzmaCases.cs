@@ -40,7 +40,7 @@ namespace LzmaDecompressor.Tests
 			ret.Add(new LzmaCase()
 			{
 				Size = size,
-				Level = 1,
+				Level = 10,
 				Content = null
 			});
 
