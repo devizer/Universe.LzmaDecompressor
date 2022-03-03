@@ -41,6 +41,19 @@ jobs:
     condition: succeededOrFailed()
     displayName: 'Publish'
     inputs:
-      pathtoPublish: '$(System.ARTIFACTSDIRECTORY)'
+      # pathtoPublish: '$(System.ARTIFACTSDIRECTORY)'
+      pathtoPublish: '$(Build.SourcesDirectory)'
       artifactName: '$(Agent.JobName)'
 
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+      testRunTitle: 'All the tests for $(Agent.JobName)'
+      
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      failIfCoverageEmpty: false # Optional      
+      summaryFileLocation: '**/In/**/coverage.cobertura.xml'
