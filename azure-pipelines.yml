@@ -31,6 +31,7 @@ jobs:
   steps:
   - bash: |
       set -eu; set -o pipefail
+      echo "BASH_VERSION: $BASH_VERSION"
       dotnet --info
       cd Universe.LzmaDecompressor.Tests
       dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
