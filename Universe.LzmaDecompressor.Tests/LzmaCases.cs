@@ -7,6 +7,7 @@ namespace LzmaDecompressor.Tests
 	using System.IO;
 	using System.Linq;
 	using KernelManagementJam.Benchmarks;
+	using NUnit.Framework;
 	using Universe;
 
 	public class LzmaCases
@@ -14,10 +15,32 @@ namespace LzmaDecompressor.Tests
 		public static LzmaCase[] GetCases()
 		{
 			var levels = Enumerable.Repeat(42, 10).Select((x, index) => index + 1).ToArray();
-			return CreateCases(
+			LzmaCase[] ret = CreateCases(
 				new char?[] {'Z', null},
 				new[] {1, 100, 1000, 10000, 100000},
 				levels);
+
+			ret = ret.Concat(Get_The_Oldest_Lzma_Test_Data()).ToArray();
+			return ret;
+		}
+
+		static LzmaCase[] Get_The_Oldest_Lzma_Test_Data()
+		{
+			List<LzmaCase> ret = new List<LzmaCase>();
+			var dir = new DirectoryInfo("The-Oldest-Lzma-Test-Data");
+			var files = dir.GetFiles("*.code");
+			foreach (var file in files)
+			{
+				ret.Add(new LzmaCase()
+				{
+					PlainFile = file.FullName,
+					CompressedFile = file.FullName + ".lzma",
+					Size = (int) file.Length,
+					Level = 10,
+				});
+			}
+
+			return ret.ToArray();
 		}
 
 		private static LzmaCase[] CreateCases(char?[] chars, int[] sizes, int[] levels)
