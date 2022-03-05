@@ -5,16 +5,16 @@
         <IsPackable>false</IsPackable>
         <AssemblyName>LzmaDecompressor.Tests</AssemblyName>
         <RootNamespace>LzmaDecompressor.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <Import Project="..\Shared-Files\NUnit-Platform.props" />
 
     <ItemGroup>
         <Content Include="Binaries/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="The-Oldest-Lzma-Test-Data/**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
