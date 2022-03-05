@@ -35,6 +35,7 @@ namespace LzmaDecompressor.Tests
 				{
 					PlainFile = file.FullName,
 					CompressedFile = file.FullName + ".lzma",
+					ActualFile = file.FullName + ".actual",
 					Size = (int) file.Length,
 					Level = 10,
 				});

@@ -42,6 +42,8 @@ namespace LzmaDecompressor.Tests
 			}
 
 			bool hasProgressNotification = false;
+			// var actualFileName = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmp-lzma-actual", Path.GetFileName(lzmaCase.PlainFile));
+			Console.WriteLine($"actualFileName: {lzmaCase.ActualFile}, Size: {lzmaCase.Size}");
 			var actual = new MemoryStream();
 			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 			{
@@ -61,10 +63,19 @@ namespace LzmaDecompressor.Tests
 				LzmaDecompressor.LzmaDecompressTo(compressed, actual, progressOptions);
 			}
 
-			Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
+
+			expected.Position = 0;
+			actual.Position = 0;
+			FileUtils.AssertStreamsAreEquals(expected, actual);
+			// Fast
+			// Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
+			// slow
+			// CollectionAssert.AreEqual(expected.ToArray(), actual.ToArray());
 			if (lzmaCase.Size >= 10000)
 				Assert.IsTrue(hasProgressNotification, "Tests sized over 10,000 bytes should have progress notification");
 
 		}
+
+
 	}
 }
