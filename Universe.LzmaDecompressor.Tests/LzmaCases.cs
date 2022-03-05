@@ -29,6 +29,7 @@ namespace LzmaDecompressor.Tests
 			List<LzmaCase> ret = new List<LzmaCase>();
 			var dir = new DirectoryInfo("The-Oldest-Lzma-Test-Data");
 			var files = dir.GetFiles("*.code");
+			files = files.OrderBy(x => Path.GetFileName(x.FullName)).ToArray();
 			foreach (var file in files)
 			{
 				ret.Add(new LzmaCase()
