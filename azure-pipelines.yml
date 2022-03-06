@@ -38,10 +38,10 @@ jobs:
       cd Universe.LzmaDecompressor.Tests
       dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
       if [[ "$AGENT_OS" == Linux ]]; then
-        file=EXTRA-4GB.code;
+        file=EXTRA-4GB-Plus.code;
         echo "PREPARING 4+ Gb Test: [$file]"
         cd The-Oldest-Lzma-Test-Data
-        time dd if=/dev/random of="$file" count=$((4*1024 + 333)) bs=$((1024*1024))
+        time dd if=/dev/random of="$file" count=$(( 4 * 1024 + 333 )) bs=$(( 1024 * 1024 ))
         time xz --format=lzma -f -z -1 -k "$file"
         ls -laS
         # dotnet test -c Release
