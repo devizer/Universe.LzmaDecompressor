@@ -49,8 +49,8 @@ jobs:
         ls -laS
         cd ..
         dotnet test -c Release
-        ls -laS
-        rm -f The-Oldest-Lzma-Test-Data/"$file"*
+        # rm -f The-Oldest-Lzma-Test-Data/"$file"*
+        find -type f -name "${file}*" -exec rm -f {} \;
       fi
     displayName: 'Tests'
 
