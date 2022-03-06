@@ -39,7 +39,7 @@ namespace LzmaDecompressor.Tests
 
 			bool hasProgressNotification = false;
 			// var actualFileName = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmp-lzma-actual", Path.GetFileName(lzmaCase.PlainFile));
-			Console.WriteLine($"actualFileName: {lzmaCase.ActualFile}, Size: {lzmaCase.Size}");
+			Console.WriteLine($"actualFileName: {lzmaCase.ActualFile}, Size: {lzmaCase.Size:n0}");
 			// var actual = new MemoryStream();
 			using (var actual = new FileStream(lzmaCase.ActualFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 8*1024))
 			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024))
