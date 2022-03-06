@@ -2,6 +2,7 @@ namespace LzmaDecompressor.Tests
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.IO;
 	using System.Linq;
 	using NUnit.Framework;
@@ -42,9 +43,10 @@ namespace LzmaDecompressor.Tests
 			var actual = new MemoryStream();
 			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024))
 			{
+				Stopwatch startAt = Stopwatch.StartNew();
 				void ShowProgress(LzmaDecompressor.Progress info)
 				{
-					Console.WriteLine($"Progress: {info}");
+					Console.WriteLine($"{startAt.Elapsed} Progress: {info}");
 					hasProgressNotification = true;
 				}
 
