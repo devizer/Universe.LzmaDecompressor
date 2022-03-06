@@ -44,7 +44,7 @@ jobs:
         time dd if=/dev/random of="$file" count=$(( 4 * 1024 + 333 )) bs=$(( 1024 * 1024 ))
         ls -laS
         sudo apt-get install pv -y -qq >/dev/null
-        pv "$file" -B16000000 -f | time xz --format=lzma -f -z -9 -e > "${file}.lzma"
+        pv "$file" -B32000000 -f | time xz --format=lzma -f -z -1 -T2 > "${file}.lzma"
         ls -laS
         cd ..
         dotnet test -c Release
