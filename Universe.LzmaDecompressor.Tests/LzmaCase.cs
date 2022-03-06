@@ -7,7 +7,7 @@ namespace LzmaDecompressor.Tests
 		public string ActualFile;
 
 		public int Level;
-		public int Size;
+		public long Size;
 		public char? Content; // null - random
 
 		public override string ToString()

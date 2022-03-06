@@ -36,7 +36,7 @@ namespace LzmaDecompressor.Tests
 					PlainFile = file.FullName,
 					CompressedFile = file.FullName + ".lzma",
 					ActualFile = file.FullName + ".actual",
-					Size = (int) file.Length,
+					Size = file.Length,
 					Level = 10,
 				});
 			}
@@ -85,7 +85,7 @@ namespace LzmaDecompressor.Tests
 
 				byte[] content;
 				if (lzmaCase.Content.HasValue)
-					content = Enumerable.Repeat((byte) lzmaCase.Content.Value, lzmaCase.Size).ToArray();
+					content = Enumerable.Repeat((byte) lzmaCase.Content.Value, (int) lzmaCase.Size).ToArray();
 				else
 				{
 					content = new byte[lzmaCase.Size];

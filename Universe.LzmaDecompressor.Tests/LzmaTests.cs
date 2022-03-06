@@ -51,7 +51,7 @@ namespace LzmaDecompressor.Tests
 					hasProgressNotification = true;
 				}
 
-				var step = lzmaCase.Size >= 100000 ? lzmaCase.Size / 10 : 4000;
+				int step = (int) (lzmaCase.Size >= 100000 ? lzmaCase.Size / 10 : 4000);
 				var progressOptions = new LzmaDecompressor.ProgressOptions()
 				{
 					Bytes = step,
