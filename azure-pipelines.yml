@@ -42,6 +42,7 @@ jobs:
         echo "PREPARING 4+ Gb Test: [$file]"
         cd The-Oldest-Lzma-Test-Data
         time dd if=/dev/random of="$file" count=$(( 4 * 1024 + 333 )) bs=$(( 1024 * 1024 ))
+        ls -laS
         time xz --format=lzma -f -z -1 -k "$file"
         ls -laS
         # dotnet test -c Release
