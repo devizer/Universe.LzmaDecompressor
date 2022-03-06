@@ -45,7 +45,7 @@ jobs:
         ls -laS
         time xz --format=lzma -f -z -1 -k "$file"
         ls -laS
-        # dotnet test -c Release
+        dotnet test -c Release
       fi
     displayName: 'Tests'
 
