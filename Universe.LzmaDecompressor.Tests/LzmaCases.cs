@@ -29,7 +29,6 @@ namespace LzmaDecompressor.Tests
 			List<LzmaCase> ret = new List<LzmaCase>();
 			var dir = new DirectoryInfo("The-Oldest-Lzma-Test-Data");
 			var files = dir.GetFiles("*.code");
-			files = files.OrderBy(x => Path.GetFileName(x.FullName)).ToArray();
 			foreach (var file in files)
 			{
 				ret.Add(new LzmaCase()
@@ -42,7 +41,7 @@ namespace LzmaDecompressor.Tests
 				});
 			}
 
-			return ret.ToArray();
+			return ret.OrderBy(x => x.Size).ToArray();
 		}
 
 		private static LzmaCase[] CreateCases(char?[] chars, int[] sizes, int[] levels)
