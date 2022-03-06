@@ -37,7 +37,7 @@ jobs:
       dotnet --info
       cd Universe.LzmaDecompressor.Tests
       dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
-      if [[ "AGENT_OS" == Linux ]]; then
+      if [[ "$AGENT_OS" == Linux ]]; then
         file=EXTRA-4GB.code;
         echo "PREPARING 4+ Gb Test: [$file]"
         cd The-Oldest-Lzma-Test-Data
