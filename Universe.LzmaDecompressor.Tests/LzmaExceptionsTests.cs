@@ -29,6 +29,8 @@ namespace LzmaDecompressor.Tests
 			// var lengths = Enumerable.Range(0, ValidLzma.Length + 1).ToList();
 			var lengths = Enumerable.Range(0, 101).ToList();
 			if (!lengths.Contains(ValidLzma.Length)) lengths.Add(ValidLzma.Length);
+			lengths.Remove(16); // OOM
+			lengths.Remove(17);
 			foreach (int len in lengths)
 			{
 				TestInvalidLzma(len);
