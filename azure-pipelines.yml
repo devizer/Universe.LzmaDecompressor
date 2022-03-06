@@ -46,6 +46,7 @@ jobs:
         sudo apt-get install pv -y -qq >/dev/null
         pv "$file" -B3000000 -f | time xz --format=lzma -f -z -1 > "${file}.lzma"
         ls -laS
+        cd ..
         dotnet test -c Release
       fi
     displayName: 'Tests'
