@@ -73,7 +73,5 @@ namespace LzmaDecompressor.Tests
 				Assert.IsTrue(hasProgressNotification, "Tests sized over 10,000 bytes should have progress notification");
 
 		}
-
-
 	}
 }
