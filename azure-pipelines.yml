@@ -31,7 +31,7 @@ jobs:
   steps:
   - bash: |
       set -eu; set -o pipefail
-      printenv | sort
+      printenv | sort || true
       echo "BASH_VERSION: $BASH_VERSION"
       echo "CURL Version: $(curl --version)"
       dotnet --info
