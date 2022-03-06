@@ -35,17 +35,12 @@ namespace LzmaDecompressor.Tests
 		[TestCaseSource(typeof(LzmaCases), nameof(LzmaCases.GetCases))]
 		public void TestAll(LzmaCase lzmaCase)
 		{
-			var expected = new MemoryStream();
-			using (var fs = new FileStream(lzmaCase.PlainFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-			{
-				fs.CopyTo(expected);
-			}
 
 			bool hasProgressNotification = false;
 			// var actualFileName = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmp-lzma-actual", Path.GetFileName(lzmaCase.PlainFile));
 			Console.WriteLine($"actualFileName: {lzmaCase.ActualFile}, Size: {lzmaCase.Size}");
 			var actual = new MemoryStream();
-			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024))
 			{
 				void ShowProgress(LzmaDecompressor.Progress info)
 				{
@@ -60,17 +55,16 @@ namespace LzmaDecompressor.Tests
 					NotifyProgress = ShowProgress
 				};
 
+				if (lzmaCase.Size <= 1)
+					progressOptions = null;
+
 				LzmaDecompressor.LzmaDecompressTo(compressed, actual, progressOptions);
 			}
 
-
-			expected.Position = 0;
 			actual.Position = 0;
-			FileUtils.AssertStreamsAreEquals(expected, actual);
-			// Fast
-			// Assert.AreEqual(Convert.ToBase64String(expected.ToArray()), Convert.ToBase64String(actual.ToArray()));
-			// slow
-			// CollectionAssert.AreEqual(expected.ToArray(), actual.ToArray());
+			using (var expected = new FileStream(lzmaCase.PlainFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8*1024))
+				FileUtils.AssertStreamsAreEquals(expected, actual);
+
 			if (lzmaCase.Size >= 10000)
 				Assert.IsTrue(hasProgressNotification, "Tests sized over 10,000 bytes should have progress notification");
 
