@@ -46,7 +46,7 @@ namespace Universe.LzmaDecompressionImplementation.SevenZip.Compression.LZMA
 			long inSize, long outSize, LzmaDecompressor.ProgressOptions progressOptions)
 		{
 			bool needProgress = progressOptions != null && progressOptions.NotifyProgress != null;
-			ulong stepBytesProgress = needProgress ? (ulong) progressOptions.Bytes : 0;
+			ulong stepBytesProgress = needProgress ? (ulong) progressOptions.MinimumStep : 0;
 			ulong prevProgress = 0;
 
 			Init(inStream, outStream);
