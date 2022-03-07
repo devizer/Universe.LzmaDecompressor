@@ -9,8 +9,9 @@
 - Progress notification call back
 
 # Test Coverage
-- liblzma from ancient Debian 7 to the latest version 5.2
+- liblzma versions from ancient Debian 7 to the latest version 5.1.1
 - Sizes from 1 byte to 4+ GB
+- Compression ration from `-1` to `-9 --extreme`
 - Linux, Windows and MacOS
 
 # API
