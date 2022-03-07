@@ -1,6 +1,6 @@
 # LZMA Decompressor
 
-- Fully Managed and Crossplatform
+- Fully managed and cross-platform
 - Coverage 94+ percents
 - Small single source file sized as 22Kb written in 2nd version of C#
 - Net Standard 1.0+, Net Framwork 2.0+, Net Core 1.0+
@@ -15,10 +15,9 @@
 
 # Documentation
 ```CSharp
-public static void LzmaDecompressTo(Stream inStream, Stream plainStream) {...}
-public static void LzmaDecompressTo(Stream inStream, Stream plainStream, ProgressOptions progressOptions) {...}
+LzmaDecompressTo(Stream inStream, Stream plainStream);
+LzmaDecompressTo(Stream inStream, Stream plainStream, ProgressOptions progressOptions);
 ```
-
 Optional ProgressOptions is a holder of notification step in bytes and a callback:
 ```CSharp
 Stopwatch startAt = Stopwatch.StartNew();
@@ -36,3 +35,6 @@ var progressOptions = new LzmaDecompressor.ProgressOptions()
 ```sh
 curl -kSL -o Universe.LzmaDecompressor.cs https://raw.githubusercontent.com/devizer/Universe.LzmaDecompressor/main/out/Universe.LzmaDecompressor.cs
 ```
+
+# Integrity check
+Regarding integration tests an LZMA archive needs external integrity check (like SHA). Aborted or incomplete lzma-archive causes false positive decompression or even out-of-memory exceptions.
