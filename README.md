@@ -4,14 +4,13 @@
 - 94+ percents test coverage
 - Small single source file sized as 22Kb written in 2nd version of C#: [Universe.LzmaDecompressor.cs](out/Universe.LzmaDecompressor.cs)
 - Net Standard 1.0+, Net Framwork 2.0+, Net Core 1.0+
-- Based on 7z SDK
-- Fast decompression and very high compression rate
-- Progress notification call back
+- Based on 7z SDK. Fast decompression and very high compression rate
+- Progress notification callback
 
 # Test Coverage
 - liblzma versions from ancient Debian 7 to the latest version 5.1.1
 - Sizes from 1 byte to 4+ GB
-- Compression ration from `-1` to `-9 --extreme`
+- Compression ratio from `-1` to `-9 --extreme`
 - Linux, Windows and MacOS
 
 # API
