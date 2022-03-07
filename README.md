@@ -15,8 +15,8 @@
 
 # API
 ```CSharp
-public static void LzmaDecompressTo(Stream inStream, Stream plainStream);
-public static void LzmaDecompressTo(Stream inStream, Stream plainStream, ProgressOptions progressOptions);
+public static void LzmaDecompressTo(Stream compressed, Stream plain);
+public static void LzmaDecompressTo(Stream compressed, Stream plain, ProgressOptions progressOptions);
 ```
 Optional ProgressOptions is a holder of notification step in bytes and a callback:
 ```CSharp
