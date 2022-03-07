@@ -38,9 +38,19 @@ jobs:
       cd Universe.LzmaDecompressor.Tests
       dotnet test -c Release --collect:"XPlat Code Coverage" --logger trx # 2>&1 | tee $(System.ARTIFACTSDIRECTORY)/test.log
       if [[ "$AGENT_OS" == Linux ]]; then
+        cd The-Oldest-Lzma-Test-Data
+        # lzmalib 5.2.5
+        docker run -d --rm -v $(pwd):/this --name xz-latest ubuntu:22.04 bash -c "tail -f /dev/null"
+        docker exec -t xz-latest bash -c "apt-get update; apt-get install xz-utils -y -q"
+        for code in *.code; do
+          cp -f ${code} jammy-${code}
+          echo "jammy-${code} ...."
+          docker exec -t xz-latest bash -c "xz --format=lzma -f -z -9 -e -k jammy-${code}"
+        done
+
+        # EXTRA-4GB-Plus.code
         file=EXTRA-4GB-Plus.code;
         echo "PREPARING 4+ Gb Test: [$file]"
-        cd The-Oldest-Lzma-Test-Data
         time dd if=/dev/random of="$file" count=$(( 4 * 1024 + 333 )) bs=$(( 1024 * 1024 ))
         ls -laS
         sudo apt-get install pv -y -qq >/dev/null
