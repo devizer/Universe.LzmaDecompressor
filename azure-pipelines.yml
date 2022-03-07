@@ -41,11 +41,11 @@ jobs:
         cd The-Oldest-Lzma-Test-Data
         # lzmalib 5.2.5
         docker run -d --rm -v $(pwd):/this --name xz-latest ubuntu:22.04 bash -c "tail -f /dev/null"
-        docker exec -t xz-latest bash -c "apt-get update; apt-get install xz-utils -y -q"
+        docker exec -t xz-latest bash -c "apt-get update -qq; apt-get install xz-utils -y -q | grep Setting || true"
         for code in *.code; do
           cp -f ${code} jammy-${code}
           echo "jammy-${code} ...."
-          docker exec -t xz-latest bash -c "xz --format=lzma -f -z -9 -e -k jammy-${code}"
+          docker exec -t xz-latest bash -c "cd /this; xz --format=lzma -f -z -9 -e -k jammy-${code}"
         done
 
         # EXTRA-4GB-Plus.code
