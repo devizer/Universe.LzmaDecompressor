@@ -24,10 +24,15 @@ Optional ProgressOptions is a holder of notification step in bytes and a callbac
 Stopwatch startAt = Stopwatch.StartNew();
 var progressOptions = new LzmaDecompressor.ProgressOptions()
 {
-    MinimumStep = 2 * 1024 * 1024,
+    MinimumStep = 2 * 1024 * 1024, /* bytes */
     NotifyProgress = progress =>
     {
         Console.WriteLine($"{startAt.Elapsed} Progress: {progress.CurrentBytes}");
     }
 };
+```
+
+# Adding or Upgrading 
+```sh
+curl -kSL -o Universe.LzmaDecompressor.cs https://raw.githubusercontent.com/devizer/Universe.LzmaDecompressor/main/out/Universe.LzmaDecompressor.cs
 ```
