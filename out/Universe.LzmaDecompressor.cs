@@ -34,19 +34,19 @@ namespace Universe
 			}
 		}
 
-		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
+		public static void LzmaDecompressTo(Stream compressed, Stream plain)
 		{
-			LzmaDecompressTo(inStream, plainStream, null);
+			LzmaDecompressTo(compressed, plain, null);
 		}
 
-		public static void LzmaDecompressTo(Stream inStream, Stream plainStream, /* Nullable*/ ProgressOptions progressOptions)
+		public static void LzmaDecompressTo(Stream compressed, Stream plain, /* Nullable*/ ProgressOptions progressOptions)
 		{
 			byte[] properties = new byte[5];
 			// a stream can returns 5 bytes in 2+ calls, but FileStream never
 			int remainBytes = properties.Length;
 			while (remainBytes > 0)
 			{
-				int n = inStream.Read(properties, properties.Length - remainBytes, remainBytes);
+				int n = compressed.Read(properties, properties.Length - remainBytes, remainBytes);
 				remainBytes -= n;
 				if (n == 0) break;
 			}
@@ -59,15 +59,15 @@ namespace Universe
 			long outSize = 0;
 			for (int i = 0; i < 8; i++)
 			{
-				int v = inStream.ReadByte();
+				int v = compressed.ReadByte();
 				if (v < 0)
 					throw new WrongLzmaHeaderException("LZMA Header too short. Missed plain size block");
 
 				outSize |= (long) (byte) v << (8 * i);
 			}
 
-			long compressedSize = inStream.Length - inStream.Position;
-			decoder.Code(inStream, plainStream, compressedSize, outSize, progressOptions);
+			long compressedSize = compressed.Length - compressed.Position;
+			decoder.Code(compressed, plain, compressedSize, outSize, progressOptions);
 		}
 	}
 }
