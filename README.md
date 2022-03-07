@@ -13,10 +13,10 @@
 - Sizes from 1 byte to 4+ GB
 - Linux, Windows and MacOS
 
-# Documentation
+# API
 ```CSharp
-LzmaDecompressTo(Stream inStream, Stream plainStream);
-LzmaDecompressTo(Stream inStream, Stream plainStream, ProgressOptions progressOptions);
+static void LzmaDecompressTo(Stream inStream, Stream plainStream);
+static void LzmaDecompressTo(Stream inStream, Stream plainStream, ProgressOptions progressOptions);
 ```
 Optional ProgressOptions is a holder of notification step in bytes and a callback:
 ```CSharp
