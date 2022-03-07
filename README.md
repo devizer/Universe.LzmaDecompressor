@@ -1,7 +1,7 @@
 # LZMA Decompressor
 
 - Fully managed and cross-platform
-- 94+ percents test coverage
+- 95+ percents test coverage
 - Small single source file sized as 22Kb written in 2nd version of C#: [Universe.LzmaDecompressor.cs](out/Universe.LzmaDecompressor.cs)
 - Net Standard 1.0+, Net Framwork 2.0+, Net Core 1.0+
 - Based on 7z SDK. Fast decompression and very high compression rate
