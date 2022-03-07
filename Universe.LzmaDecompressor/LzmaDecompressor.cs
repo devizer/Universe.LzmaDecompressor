@@ -11,8 +11,7 @@ namespace Universe
 	{
 		public class ProgressOptions
 		{
-			public int Milliseconds = 900;
-			public int MinimumStep = 1024 * 1024;
+			public int MinimumStep = 2 * 1024 * 1024;
 			public Action<Progress> NotifyProgress;
 		}
 
@@ -35,12 +34,10 @@ namespace Universe
 			}
 		}
 
-
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream)
 		{
 			LzmaDecompressTo(inStream, plainStream, null);
 		}
-
 
 		public static void LzmaDecompressTo(Stream inStream, Stream plainStream, /* Nullable*/ ProgressOptions progressOptions)
 		{
