@@ -8,8 +8,8 @@
 - Progress notification callback
 
 # Test Coverage
-- liblzma versions from ancient Debian 7 to the latest version 5.1.1
-- Sizes from 1 byte to 4+ GB
+- liblzma versions from 4.x to the latest version 5.2.5
+- Sizes from 1 byte upto over 4+ GB
 - Compression levels from `-1` to `-9 --extreme`
 - Linux, Windows and MacOS
 
