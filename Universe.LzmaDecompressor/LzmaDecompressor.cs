@@ -1,3 +1,5 @@
+// https://github.com/devizer/Universe.LzmaDecompressor/
+
 namespace Universe
 {
 	using System;
