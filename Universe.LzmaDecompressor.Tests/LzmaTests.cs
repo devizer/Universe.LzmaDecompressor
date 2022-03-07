@@ -44,18 +44,16 @@ namespace LzmaDecompressor.Tests
 			using (var actual = new FileStream(lzmaCase.ActualFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 8*1024))
 			using (var compressed = new FileStream(lzmaCase.CompressedFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024))
 			{
-				Stopwatch startAt = Stopwatch.StartNew();
-				void ShowProgress(LzmaDecompressor.Progress info)
-				{
-					Console.WriteLine($"{startAt.Elapsed} Progress: {info}");
-					hasProgressNotification = true;
-				}
-
 				int step = (int) (lzmaCase.Size >= 100000 ? lzmaCase.Size / 10 : 4000);
+				Stopwatch startAt = Stopwatch.StartNew();
 				var progressOptions = new LzmaDecompressor.ProgressOptions()
 				{
-					Bytes = step,
-					NotifyProgress = ShowProgress
+					MinimumStep = step,
+					NotifyProgress = progress =>
+					{
+						Console.WriteLine($"{startAt.Elapsed} Progress: {progress.CurrentBytes:n0}");
+						hasProgressNotification = true;
+					}
 				};
 
 				if (lzmaCase.Size <= 1)
@@ -66,7 +64,7 @@ namespace LzmaDecompressor.Tests
 
 			// actual.Position = 0;
 			using (var actual = new FileStream(lzmaCase.ActualFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8 * 1024))
-			using (var expected = new FileStream(lzmaCase.PlainFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8*1024))
+			using (var expected = new FileStream(lzmaCase.PlainFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8 * 1024))
 				FileUtils.AssertStreamsAreEquals(expected, actual);
 
 			if (lzmaCase.Size >= 10000)

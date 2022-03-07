@@ -1,9 +1,9 @@
-# Universe.LzmaDecompressor
+# LZMA Decompressor
 
 - Fully Managed and Crossplatform
-- Coverage 94+ percents using ancient liblzma from Debian 7 to Ubuntu 22.04
-- SMall single source file sized as 22Kb written in 2nd version of C#
-- Net Standard 1.0+, Net Framwork 2.0+
+- Coverage 94+ percents
+- Small single source file sized as 22Kb written in 2nd version of C#
+- Net Standard 1.0+, Net Framwork 2.0+, Net Core 1.0+
 - Based on 7z SDK
 - Fast decompression and very high compression rate
 - Progress notification call back
@@ -20,18 +20,14 @@ public static void LzmaDecompressTo(Stream inStream, Stream plainStream, Progres
 ```
 
 Optional ProgressOptions is a holder of notification step in bytes and a callback:
-
+```CSharp
 Stopwatch startAt = Stopwatch.StartNew();
-void ShowProgress(LzmaDecompressor.Progress info)
-{
-    Console.WriteLine($"{startAt.Elapsed} Progress: {info}");
-    hasProgressNotification = true;
-}
-
-int step = (int) (lzmaCase.Size >= 100000 ? lzmaCase.Size / 10 : 4000);
 var progressOptions = new LzmaDecompressor.ProgressOptions()
 {
-    MinimumStep = 2*1024*1024,
-    NotifyProgress = ShowProgress
+    MinimumStep = 2 * 1024 * 1024,
+    NotifyProgress = progress =>
+    {
+        Console.WriteLine($"{startAt.Elapsed} Progress: {progress.CurrentBytes}");
+    }
 };
-
+```

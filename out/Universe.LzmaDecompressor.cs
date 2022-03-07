@@ -16,7 +16,7 @@ namespace Universe
 
 		public class Progress
 		{
-			public ulong Current;
+			public ulong CurrentBytes;
 
 			public Progress()
 			{
@@ -24,12 +24,12 @@ namespace Universe
 
 			public Progress(ulong current)
 			{
-				Current = current;
+				CurrentBytes = current;
 			}
 
 			public override string ToString()
 			{
-				return Current.ToString("n0");
+				return CurrentBytes.ToString("n0");
 			}
 		}
 
